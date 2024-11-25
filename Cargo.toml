@@ -1,0 +1,53 @@
+[package]
+name = "axum-let"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+axum = { version = "0.7", features = ["http2", "tokio", "multipart"] }
+futures = "0.3"
+tokio = { version = "1.41", features = ["full", "time"] }
+tokio-stream = "0.1"
+tower = "0.5"
+tower-http = { version = "0.6", features = [
+    "cors",
+    "trace",
+    "limit",
+    "request-id",
+    "timeout",
+    "set-header",
+    "compression-gzip",
+    "fs",
+] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["local-time"] }
+time = { version = "0.3", features = ["serde", "serde-human-readable"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.8"
+rs-snowflake = "0.6"
+uuid = { version = "1.11", features = [
+    "v4",
+    "v7",
+    "fast-rng",
+    "macro-diagnostics",
+] }
+ulid = "1.1"
+reqwest = "0.12"
+sea-orm = { version = "1.1", default-features = false, features = [
+    "macros",
+    "runtime-tokio-rustls",
+    "debug-print",
+    "sqlx-postgres",
+    "with-time",
+] }
+redis = { version = "0.27", features = ["tokio-rustls-comp", "cluster"] }
+bb8-redis = "0.17"
+tokio-zookeeper = "0.4"
+
+[profile.release]
+panic = "abort"
+lto = true
+opt-level = "z"
+codegen-units = 1
+strip = "debuginfo"

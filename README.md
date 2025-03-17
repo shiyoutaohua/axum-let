@@ -7,5 +7,5 @@ The study project for axum.
 ```sh
 cargo fix --allow-no-vcs
 cargo fmt
-cargo r
+cargo run
 ```

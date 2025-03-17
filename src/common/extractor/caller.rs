@@ -1,5 +1,5 @@
 use crate::common::{error::biz_error::BizError, extractor::apikey::Apikey};
-use axum::{async_trait, extract::FromRequestParts, http::request::Parts, RequestPartsExt};
+use axum::{extract::FromRequestParts, http::request::Parts, RequestPartsExt};
 use serde::{Deserialize, Serialize};
 use tracing::debug;
 
@@ -9,7 +9,6 @@ pub struct Caller {
     pub appname: String,
 }
 
-#[async_trait]
 impl<S> FromRequestParts<S> for Caller
 where
     S: Send + Sync,

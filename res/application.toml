@@ -2,14 +2,8 @@
 name = "axum-let"
 version = "1.0.0"
 
-[[datasource]]
-name = "ds1"
-url = "mysql://mysql_db_1_u:878c133753ac593a@mysql.sqlpub.com:3306/mysql_db_1"
-username = "root"
-password = "China@1949"
-[[datasource]]
-name = "ds2"
-url = "mysql://mysql_db_1_u:878c133753ac593a@mysql.sqlpub.com:3306/mysql_db_1"
+[zookeeper]
+url = "121.37.129.161:2181"
 username = "root"
 password = "China@1949"
 
@@ -18,7 +12,13 @@ url = "redis://default:China@1949@121.37.129.161:6379"
 username = "default"
 password = "China@1949"
 
-[zookeeper]
-url = "121.37.129.161:2181"
+[[datasource]]
+name = "ds1"
+url = "mysql://mysql_db_1_u:878c133753ac593a@mysql.sqlpub.com:3306/mysql_db_1"
+username = "root"
+password = "China@1949"
+[[datasource]]
+name = "ds2"
+url = "mysql://mysql_db_1_u:878c133753ac593a@mysql.sqlpub.com:3306/mysql_db_1"
 username = "root"
 password = "China@1949"

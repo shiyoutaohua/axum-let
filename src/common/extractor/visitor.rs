@@ -4,7 +4,7 @@ use crate::{
     common::{error::biz_error::BizError, extractor::token::Token},
     model::dto::user::UserSession,
 };
-use axum::{async_trait, extract::FromRequestParts, http::request::Parts, RequestPartsExt};
+use axum::{extract::FromRequestParts, http::request::Parts, RequestPartsExt};
 use bb8_redis::{bb8::Pool, RedisConnectionManager};
 use redis::AsyncCommands;
 use serde::{Deserialize, Serialize};
@@ -15,7 +15,6 @@ pub struct Visitor {
     pub user_id: i64,
 }
 
-#[async_trait]
 impl<S> FromRequestParts<S> for Visitor
 where
     S: Send + Sync,

@@ -8,7 +8,8 @@ use std::{
 pub struct ApplicationConfiguration {
     pub app: Option<Application>,
     pub datasource: Vec<Datasource>,
-    pub redis: Redis,
+    pub redis: Option<Redis>,
+    pub zk: Option<ZooKeeper>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -18,8 +19,7 @@ pub struct Application {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct Datasource {
-    pub name: Option<String>,
+pub struct ZooKeeper {
     pub url: Option<String>,
     pub username: Option<String>,
     pub password: Option<String>,
@@ -27,6 +27,14 @@ pub struct Datasource {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Redis {
+    pub url: Option<String>,
+    pub username: Option<String>,
+    pub password: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Datasource {
+    pub name: Option<String>,
     pub url: Option<String>,
     pub username: Option<String>,
     pub password: Option<String>,

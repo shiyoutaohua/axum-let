@@ -80,7 +80,9 @@ pub async fn init() {
             .min_connections(1)
             .sqlx_logging(false)
             .to_owned();
-    let ds = Database::connect(ds_opt).await.expect("");
+    let ds = Database::connect(ds_opt)
+        .await
+        .expect("can't connect to database");
     // router
     let app_router = Router::new()
         .merge(base_router::routes())
@@ -106,7 +108,7 @@ pub async fn init() {
         .fallback(app::handler_404);
 
     let app_addr = SocketAddr::new(Ipv4Addr::UNSPECIFIED.into(), 8080);
-    let res_addr = SocketAddr::new(Ipv6Addr::UNSPECIFIED.into(), 80);
+    let res_addr = SocketAddr::new(Ipv6Addr::UNSPECIFIED.into(), 8081);
     debug!("app listening on {}", app_addr);
     debug!("res listening on {}", res_addr);
     tokio::join!(

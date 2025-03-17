@@ -1,5 +1,5 @@
 use crate::common::{constant::http::HEADER_APIKEY, error::biz_error::BizError};
-use axum::{async_trait, extract::FromRequestParts, http::request::Parts};
+use axum::{extract::FromRequestParts, http::request::Parts};
 use serde::{Deserialize, Serialize};
 use std::ops::Deref;
 use tracing::debug;
@@ -7,7 +7,6 @@ use tracing::debug;
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Apikey(pub String);
 
-#[async_trait]
 impl<S> FromRequestParts<S> for Apikey
 where
     S: Send + Sync,

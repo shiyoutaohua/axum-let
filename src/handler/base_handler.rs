@@ -1,7 +1,10 @@
 use std::{collections::HashMap, convert::Infallible, path::Path, time::Duration};
 
 use axum::{
-    extract::{Multipart, Path as PathVar, Query},
+    extract::{
+        ws::{Message, WebSocket},
+        Multipart, Path as PathVar, Query, WebSocketUpgrade,
+    },
     http::HeaderMap,
     response::{
         sse::{Event, KeepAlive},
@@ -19,6 +22,7 @@ use tokio::{
 };
 use tokio_stream::StreamExt;
 use tokio_zookeeper::ZooKeeper;
+use tracing::debug;
 
 use crate::{common::cfg::app::APPLICATION_CONFIGURE, model::result::base::BizResult};
 
@@ -85,15 +89,47 @@ pub async fn upload_file(mut multipart: Multipart) -> impl IntoResponse {
 
 pub async fn open_sse() -> Sse<impl Stream<Item = Result<Event, Infallible>>> {
     let stream = stream::repeat_with(|| {
-        Event::default().data(OffsetDateTime::now_utc().format(&Rfc3339).unwrap())
+        Event::default()
+            .data(format!(
+                "ServerMsg#{}",
+                OffsetDateTime::now_utc().format(&Rfc3339).unwrap()
+            ))
+            .event("sse-event-name")
+            .id("sse-event-id")
+            .comment("sse-event-comment")
     })
     .map(Ok)
     .throttle(Duration::from_secs(3));
-    Sse::new(stream).keep_alive(
-        KeepAlive::new()
-            .interval(Duration::from_secs(30))
-            .text("keep-alive-msg"),
-    )
+    Sse::new(stream).keep_alive(KeepAlive::default().text("sse-keep-alive-msg"))
+}
+
+pub async fn open_ws(ws: WebSocketUpgrade) -> impl IntoResponse {
+    ws.on_upgrade(async |mut socket: WebSocket| {
+        while let Some(Ok(message)) = socket.next().await {
+            match message {
+                Message::Text(text) => {
+                    debug!("ws received <{text}>");
+                    socket
+                        .send(Message::text(format!(
+                            "ServerMsg#{}",
+                            OffsetDateTime::now_utc().format(&Rfc3339).unwrap()
+                        )))
+                        .await
+                        .expect("can't send message");
+                }
+                Message::Binary(_bin) => {}
+                Message::Ping(_ping_data) => {
+                    debug!("ws ping");
+                }
+                Message::Pong(_pong_data) => {
+                    debug!("ws pong");
+                }
+                Message::Close(_close_data) => {
+                    debug!("ws close");
+                }
+            }
+        }
+    })
 }
 
 pub async fn ping_redis(
